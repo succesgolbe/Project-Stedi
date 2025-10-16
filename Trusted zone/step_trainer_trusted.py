@@ -22,7 +22,7 @@ DEFAULT_DATA_QUALITY_RULESET = """
 """
 
 # Script generated for node Amazon S3
-AmazonS3_node1760653959810 = glueContext.create_dynamic_frame.from_options(format_options={"multiLine": "false"}, connection_type="s3", format="json", connection_options={"paths": ["s3://stedi-project-dgs/customer/curated/"], "recurse": True}, transformation_ctx="AmazonS3_node1760653959810")
+AmazonS3_node1760653959810 = glueContext.create_dynamic_frame.from_catalog(database="stedi_db", table_name="customer_curated", transformation_ctx="AmazonS3_node1760653959810")
 
 # Script generated for node Amazon S3
 AmazonS3_node1760653960498 = glueContext.create_dynamic_frame.from_catalog(database="stedi_db", table_name="step_trainer_landing", transformation_ctx="AmazonS3_node1760653960498")
