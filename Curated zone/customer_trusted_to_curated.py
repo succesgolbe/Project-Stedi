@@ -36,18 +36,17 @@ AmazonS3_node1760651451713 = glueContext.create_dynamic_frame.from_catalog(datab
 Join_node1760651454736 = Join.apply(frame1=AmazonS3_node1760651451713, frame2=AmazonS3_node1760651450603, keys1=["user"], keys2=["email"], transformation_ctx="Join_node1760651454736")
 
 # Script generated for node Drop Fields and Duplicates
-SqlQuery5956 = '''
+SqlQuery6005 = '''
 select distinct customerName, email, phone, birthDay, 
 serialNumber, registrationDate, lastUpdateDate, shareWithResearchAsOfDate,
 shareWithPublicAsOfDate, shareWithFriendsAsOfDate from myDataSource
-
 '''
-DropFieldsandDuplicates_node1760652978966 = sparkSqlQuery(glueContext, query = SqlQuery5956, mapping = {"myDataSource":Join_node1760651454736}, transformation_ctx = "DropFieldsandDuplicates_node1760652978966")
+DropFieldsandDuplicates_node1760652978966 = sparkSqlQuery(glueContext, query = SqlQuery6005, mapping = {"myDataSource":Join_node1760651454736}, transformation_ctx = "DropFieldsandDuplicates_node1760652978966")
 
 # Script generated for node Amazon S3
 EvaluateDataQuality().process_rows(frame=DropFieldsandDuplicates_node1760652978966, ruleset=DEFAULT_DATA_QUALITY_RULESET, publishing_options={"dataQualityEvaluationContext": "EvaluateDataQuality_node1760651443381", "enableDataQualityResultsPublishing": True}, additional_options={"dataQualityResultsPublishing.strategy": "BEST_EFFORT", "observations.scope": "ALL"})
 AmazonS3_node1760651464733 = glueContext.getSink(path="s3://stedi-project-dgs/customer/curated/", connection_type="s3", updateBehavior="UPDATE_IN_DATABASE", partitionKeys=[], enableUpdateCatalog=True, transformation_ctx="AmazonS3_node1760651464733")
-AmazonS3_node1760651464733.setCatalogInfo(catalogDatabase="stedi_db",catalogTableName="customer_trusted")
+AmazonS3_node1760651464733.setCatalogInfo(catalogDatabase="stedi_db",catalogTableName="customer_curated")
 AmazonS3_node1760651464733.setFormat("json")
 AmazonS3_node1760651464733.writeFrame(DropFieldsandDuplicates_node1760652978966)
 job.commit()
